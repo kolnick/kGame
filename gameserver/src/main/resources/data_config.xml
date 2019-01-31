@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configs>
+    <configdata>
+        <config class="com.game.common.meta.model.FunctionConfig"
+                file="Function" key="id">
+        </config>
+    </configdata>
+
+    <!--<configcaches>-->
+    <!--<configcache class="com.sh.game.config.cache.StoreConfigCache"-->
+    <!--desc="商店缓存"/>-->
+    <!--</configcaches>-->
+
+</configs>

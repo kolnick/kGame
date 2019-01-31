@@ -1,0 +1,12 @@
+${package};
+
+/**
+ * <p>{desc}</p>
+ * <p>Created by MessageUtil</p>
+ */
+public class ${className} {
+
+{field}
+{getterAndSetter}
+
+}
