@@ -14,16 +14,16 @@ import java.net.URL;
  * @Email Silence.Sx@Gmail.com
  * Created by Silence on 2017/7/20.
  */
-public class FindConfigPath {
-
-    private static final Logger logger = LoggerFactory.getLogger(FindConfigPath.class);
+public class FilePathUtil {
+    
+    private static final Logger logger = LoggerFactory.getLogger(FilePathUtil.class);
     public static final String CODE_UTF_8 = "utf8";
     public static final String CODE_GBK = "gbk";
     public static final String TYPE_TXT = "txt";
     public static final String TYPE_JAVA = "java";
     public static final String TYPE_CVS = "CVS";
-
-
+    
+    
     /**
      * syslog应用程序被打包成为jar包发布。在syslog服务中，需要在jar文件位置创建临时文件夹，以保存数据。
      * 临时文件夹：1 读文件中，ftp到中央日志服务的文件，被放到临时文件夹后再读。
@@ -37,7 +37,7 @@ public class FindConfigPath {
         }
         return path;
     }
-
+    
     /**
      * 从通过Class Loading计算路径：
      * 1 class文件通过jar包加载：
@@ -51,28 +51,28 @@ public class FindConfigPath {
      */
     private static String getDirFromClassLoader() {
         try {
-            String path = FindConfigPath.class.getName().replace(".", "/");
+            String path = FilePathUtil.class.getName().replace(".", "/");
             path = "/" + path + ".class";
-            URL url = FindConfigPath.class.getResource(path);
+            URL url = FilePathUtil.class.getResource(path);
             String jarUrl = url.getPath();
             if (jarUrl.startsWith("file:")) {
                 if (jarUrl.length() > 5) {
                     jarUrl = jarUrl.substring(5);
                 }
                 jarUrl = jarUrl.split("!")[0];
-
+                
             } else {
-                jarUrl = FindConfigPath.class.getResource("/").toString().substring(5);
+                jarUrl = FilePathUtil.class.getResource("/").toString().substring(5);
             }
             File file = new File(jarUrl);
             return file.getParent();
-
+            
         } catch (Exception e) {
         }
         return null;
     }
-
-
+    
+    
     /**
      * 获取配置文件
      * 1首先判断是否输入了自定义配置文件地址
@@ -90,12 +90,12 @@ public class FindConfigPath {
             configPathFileHolder = new File(customPath);
 //			Log.sys.debug("获取自定义配置文件:"+customPath);
         } else {
-
+            
             //2获取JAR包所在位置配置文件
-            configPathFileHolder = new File(FindConfigPath.getJarDir() + getFileSeparator() + subDir + getFileSeparator());
+            configPathFileHolder = new File(FilePathUtil.getJarDir() + getFileSeparator() + subDir + getFileSeparator());
             if (!configPathFileHolder.exists()) {
                 //3 获取工程资源包下文件
-                String path = FindConfigPath.class.getResource("/").getPath() + subDir + "/";
+                String path = FilePathUtil.class.getResource("/").getPath() + subDir + "/";
                 configPathFileHolder = new File(path);
             } else {
                 logger.debug("获取JAR包所在位置配置文件:" + configPathFileHolder.getPath());
@@ -103,12 +103,12 @@ public class FindConfigPath {
         }
         return configPathFileHolder;
     }
-
+    
     //获取文件分隔符
     public static String getFileSeparator() {
         return System.getProperty("file.separator");
     }
-
+    
     /**
      * 找到对应的资源文件
      *
@@ -119,10 +119,10 @@ public class FindConfigPath {
     public static File getConfigPath(String subDir) {
         return getConfigPathFileHolder(null, subDir);
     }
-
-
+    
+    
     public static String getUserDirFile(String fileName) {
         return System.getProperty("user.dir") + File.separator + fileName;
     }
-
+    
 }

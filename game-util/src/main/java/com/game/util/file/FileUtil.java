@@ -24,7 +24,7 @@ public class FileUtil {
         if (indexOf == -1 || indexOf == 0) {
             throw new Exception("测试");
         }
-        return filePath.substring(indexOf, filePath.length());
+        return filePath.substring(indexOf);
     }
     
     public static String getProjectRootPath() {
@@ -120,71 +120,47 @@ public class FileUtil {
         }
     }
     
+    
     /**
-     * 获取字符串列表
+     * 判断文件是否存在
      *
-     * @param file
-     * @param charsetName
+     * @param path
      * @return
-     * @throws FileNotFoundException
      */
-    public static List<String> loadStringList(File file, String charsetName)
-            throws FileNotFoundException {
-        if (file == null || charsetName == null) {
-            throw new NullPointerException();
-        }
-        if (!file.exists()) {
-            throw new FileNotFoundException();
-        }
-        if (!file.isFile() || !file.canRead()) {
-            return null;
-        }
-        FileInputStream fileInputStream = new FileInputStream(file);
-        return loadStringList(fileInputStream, charsetName);
+    public static boolean hasFile(String path) {
+        File f = new File(path);
+        return f.exists();
     }
     
     /**
-     * 获取字符串列表
+     * 判断文件是否能读取
      *
-     * @param fileInputStream
-     * @param charsetName
+     * @param path
      * @return
-     * @throws FileNotFoundException
      */
-    public static List<String> loadStringList(FileInputStream fileInputStream,
-                                              String charsetName) throws FileNotFoundException {
-        if (fileInputStream == null || charsetName == null) {
-            throw new NullPointerException();
-        }
-        BufferedReader reader = null;
-        List<String> list = null;
-        
-        try {
-            reader = new BufferedReader(new InputStreamReader(fileInputStream, charsetName));
-            list = new ArrayList<String>();
-            String buf = null;
-            while ((buf = reader.readLine()) != null) {
-                list.add(buf);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return list;
+    public static boolean canRead(String path) {
+        File f = new File(path);
+        return f.exists() && f.isFile() && f.canRead();
     }
     
-    public static Properties getFileProperties(String path) throws IOException {
-        Properties properties = new Properties();
-        FileInputStream inStream = new FileInputStream(path);
-        properties.load(inStream);
-        return properties;
+    /**
+     * 文件拷贝
+     *
+     * @param in
+     * @param out
+     * @throws Exception
+     */
+    public static void copyFile(File in, File out) throws Exception {
+        FileInputStream fis = new FileInputStream(in);
+        FileOutputStream fos = new FileOutputStream(out);
+        byte[] buf = new byte[1024];
+        int i = 0;
+        while ((i = fis.read(buf)) != -1) {
+            fos.write(buf, 0, i);
+        }
+        fis.close();
+        fos.close();
     }
+    
     
 }

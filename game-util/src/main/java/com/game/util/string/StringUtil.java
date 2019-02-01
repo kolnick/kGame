@@ -33,7 +33,7 @@ public class StringUtil {
     }
     
     public static boolean isNullOrEmpty(String str) {
-        if (str == null || str.length() == 0 || str.endsWith("")) {
+        if (str == null || str.length() == 0||str.trim().isEmpty()) {
             return false;
         }
         return true;
