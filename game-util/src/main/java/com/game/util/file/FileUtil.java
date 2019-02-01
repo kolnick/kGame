@@ -18,7 +18,7 @@ import com.game.util.string.StringUtil;
  * @since 1.0.0
  */
 public class FileUtil {
-
+    
     public static String getFileType(String filePath) throws Exception {
         int indexOf = filePath.lastIndexOf(".");
         if (indexOf == -1 || indexOf == 0) {
@@ -26,11 +26,11 @@ public class FileUtil {
         }
         return filePath.substring(indexOf, filePath.length());
     }
-
+    
     public static String getProjectRootPath() {
         return ClassLoader.getSystemResource("").getPath();
     }
-
+    
     public static List<File> listFiles(String path) {
         if (StringUtil.isNullOrEmpty(path)) {
             return null;
@@ -39,20 +39,20 @@ public class FileUtil {
         findFiles(path, allFile);
         return allFile;
     }
-
+    
     public static List<File> listFiles(String path, String filter) {
         List<File> allFile = new ArrayList<File>();
         findFiles(path, allFile, filter);
         return allFile;
     }
-
+    
     public static List<File> listFile(String path, String filter,
                                       boolean removeSuffix) {
         List<File> allFile = new ArrayList<File>();
         findFiles(path, allFile, filter);
         return allFile;
     }
-
+    
     public static List<String> listFileName(String path, String filter,
                                             boolean removeSuffix) {
         List<File> allFile = new ArrayList<File>();
@@ -71,11 +71,11 @@ public class FileUtil {
         }
         return resultFileNameList;
     }
-
+    
     private static void findFiles(String path, List<File> allFile) {
         findFiles(path, allFile, null);
     }
-
+    
     private static void findFiles(String path, List<File> allFile,
                                   String filter) {
         File file = new File(path);
@@ -102,12 +102,12 @@ public class FileUtil {
             allFile.add(file);
         }
     }
-
+    
     public static URL findURLByFileName(String fileName) {
         ClassLoader cl = FileUtil.class.getClassLoader();
         return cl.getResource(fileName);
     }
-
+    
     public static InputStream findInputStreamByFileName(String fileName) {
         try {
             URL url = findURLByFileName(fileName);
@@ -119,7 +119,7 @@ public class FileUtil {
             return null;
         }
     }
-
+    
     /**
      * 获取字符串列表
      *
@@ -136,13 +136,13 @@ public class FileUtil {
         if (!file.exists()) {
             throw new FileNotFoundException();
         }
-        if (!file.isFile() || file.canRead() == false) {
+        if (!file.isFile() || !file.canRead()) {
             return null;
         }
         FileInputStream fileInputStream = new FileInputStream(file);
         return loadStringList(fileInputStream, charsetName);
     }
-
+    
     /**
      * 获取字符串列表
      *
@@ -158,7 +158,7 @@ public class FileUtil {
         }
         BufferedReader reader = null;
         List<String> list = null;
-
+        
         try {
             reader = new BufferedReader(new InputStreamReader(fileInputStream, charsetName));
             list = new ArrayList<String>();
@@ -166,8 +166,6 @@ public class FileUtil {
             while ((buf = reader.readLine()) != null) {
                 list.add(buf);
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -181,12 +179,12 @@ public class FileUtil {
         }
         return list;
     }
-
-    public static  Properties getFileProperties(String path) throws IOException {
+    
+    public static Properties getFileProperties(String path) throws IOException {
         Properties properties = new Properties();
         FileInputStream inStream = new FileInputStream(path);
         properties.load(inStream);
         return properties;
     }
-
+    
 }

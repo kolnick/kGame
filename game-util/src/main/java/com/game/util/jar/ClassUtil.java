@@ -17,20 +17,17 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 /**
- * class工具类，包含
- *
- * @author 张力
- * @date 2015-4-3 下午4:21:22
+ * class工具类
  */
 public class ClassUtil {
-
+    
     private static final String PROTOCOL_FILE = "file";
-
+    
     private static final String PROTOCOL_JAR = "jar";
-
+    
     private static Logger LOGGER = LoggerFactory.getLogger(ClassUtil.class);
-
-
+    
+    
     /**
      * 获取指定包下的具有指定注解的类
      *
@@ -44,8 +41,8 @@ public class ClassUtil {
                 .filter(v -> v.getAnnotation(annotationClass) != null)
                 .collect(Collectors.toSet());
     }
-
-
+    
+    
     public static Set<Class<?>> findClassByPkg(String packageName) {
         Set<Class<?>> allClazz = new LinkedHashSet<>();
         boolean recursive = true;
@@ -70,16 +67,16 @@ public class ClassUtil {
         }
         return allClazz;
     }
-
+    
     /**
      * @param jar        jar归档文件
      * @param packageDir package转换成文件目录格式的字符串
      * @return
      */
     private static Set<Class<?>> findClassFromJar(JarFile jar, String packageDir) {
-
+        
         Set<Class<?>> ret = new LinkedHashSet<>();
-
+        
         Enumeration<JarEntry> entries = jar.entries();
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
@@ -92,7 +89,7 @@ public class ClassUtil {
             if (!name.startsWith(packageDir) || !name.endsWith(".class")) {
                 continue;
             }
-
+            
             name = name.replaceAll("/", ".");
             name = name.substring(0, name.length() - 6);
             try {
@@ -103,9 +100,9 @@ public class ClassUtil {
             }
         }
         return ret;
-
+        
     }
-
+    
     /**
      * 获取文件夹下所有的类
      *
@@ -115,18 +112,18 @@ public class ClassUtil {
      * @return
      */
     private static Set<Class<?>> findClassFromDir(String packageName, String filePath, boolean recursive) {
-
+        
         File dir = new File(filePath);
         if (!dir.exists() || !dir.isDirectory()) {
             return Collections.emptySet();
         }
-
+        
         Set<Class<?>> ret = new LinkedHashSet<>();
-
+        
         File[] files = dir.listFiles(file -> (recursive && file.isDirectory()) || file.getName().endsWith(".class"));
-
+        
         for (File file : files) {
-
+            
             if (file.isDirectory()) {
                 ret.addAll(findClassFromDir(packageName + "." + file.getName(), file.getAbsolutePath(), recursive));
                 continue;
@@ -140,10 +137,10 @@ public class ClassUtil {
                     LOGGER.error("读取文件夹中的Class文件出错", e);
                 }
             }
-
+            
         }
         return ret;
     }
-
-
+    
+    
 }

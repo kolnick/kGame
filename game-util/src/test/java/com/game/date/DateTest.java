@@ -11,7 +11,7 @@ public class DateTest
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, 10);
-		//int natralDayFromTime = DateUtil.getNatralDayFromTime(cal.getTimeInMillis());
+		//int natralDayFromTime = TimeUtil.getNatralDayFromTime(cal.getTimeInMillis());
 		//System.out.println(natralDayFromTime);
 	}
 }
