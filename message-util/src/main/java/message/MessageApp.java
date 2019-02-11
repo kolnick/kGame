@@ -1,6 +1,6 @@
 package message;
 
-import com.game.util.file.FindConfigPath;
+import com.game.util.file.FilePathUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +15,7 @@ public class MessageApp {
     public static void main(String[] args) {
         // 读取xml 数据
         try {
-            File configPath = FindConfigPath.getConfigPath("config.properties");
+            File configPath = FilePathUtil.getConfigPath("config.properties");
             Properties properties = new Properties();
             properties.load(new FileInputStream(configPath));
             String input = properties.getProperty("input");
