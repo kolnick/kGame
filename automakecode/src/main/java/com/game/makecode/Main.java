@@ -5,9 +5,9 @@ import com.game.makecode.bean.JavaBean;
 import com.game.makecode.constant.GlobalConstant;
 import com.game.makecode.constant.JavaDataType;
 import com.game.makecode.util.ExcelUtil;
-import com.game.util.check.CheckerUtil;
 import com.game.util.convert.ConvertUtil;
 import com.game.util.file.FileUtil;
+import com.game.util.regex.RegexUtil;
 import com.game.util.string.StringUtil;
 import com.sun.codemodel.*;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
@@ -48,7 +48,7 @@ public class Main {
                             continue;
                         }
                         String sheetName = sheet.getSheetName();
-                        String[] sheetNameStrAtr = ConvertUtil.getStringArr(sheetName, "_");
+                        String[] sheetNameStrAtr = StringUtil.getStringArr(sheetName, "_");
                         // 检测名字是否符合标准
                         if (!isValidSheetName(sheetNameStrAtr)) {
                             logger.info("文件:" + fileName + "格式有问题," + "sheet表名格式不正确 ");
@@ -74,7 +74,7 @@ public class Main {
         if (s.startsWith("c_") || s.equals("s_") || s.equals("cs_")) {
             String s1 = stringArr[1];
             // 只能使用
-            return CheckerUtil.isLetter(s1);
+            return RegexUtil.isLetter(s1);
         }
         return false;
     }
