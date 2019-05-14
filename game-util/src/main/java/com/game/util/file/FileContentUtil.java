@@ -27,7 +27,7 @@ public class FileContentUtil {
         
         try {
             reader = new BufferedReader(new InputStreamReader(fileInputStream, charsetName));
-            list = new ArrayList<String>();
+            list = new ArrayList<>();
             String buf = null;
             while ((buf = reader.readLine()) != null) {
                 list.add(buf);

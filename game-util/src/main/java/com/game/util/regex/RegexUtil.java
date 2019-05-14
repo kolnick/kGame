@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @description 正则表达式工具类
  */
 public class RegexUtil {
-    
+
     /**
      * 中文范围
      */
@@ -17,17 +17,17 @@ public class RegexUtil {
      * 标题符号过滤器
      */
     private final static Pattern INTERPUNCTION_PATTERN = Pattern.compile("-[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]");
-    
+
     /**
      * 是否数字（包含负数）
      */
     private final static Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+");
-    
+
     /**
      * 正整数
      */
     private final static Pattern POSTIVE_NUMBER_PATTERN = Pattern.compile("[1-9]\\d*");
-    
+
     /**
      * 英文或数字
      */
@@ -36,17 +36,17 @@ public class RegexUtil {
      * IP
      */
     private final static Pattern IP_ADDESS_PATTERN = Pattern.compile("(((2[0-4]\\d)|(25[0-5]))|(1\\d{2})|([1-9]\\d)|(\\d))[.](((2[0-4]\\d)|(25[0-5]))|(1\\d{2})|([1-9]\\d)|(\\d))[.](((2[0-4]\\d)|(25[0-5]))|(1\\d{2})|([1-9]\\d)|(\\d))[.](((2[0-4]\\d)|(25[0-5]))|(1\\d{2})|([1-9]\\d)|(\\d))");
-    
+
     /**
      * Email
      */
     private final static Pattern EMAIL_PATTERN = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
-    
+
     /**
      * a-zA-Z
      */
     private final static Pattern LETTER_PATTERN = Pattern.compile("^[a-zA-Z]*$"); // words
-    
+
     /**
      * 匹配字母或数字
      *
@@ -56,7 +56,7 @@ public class RegexUtil {
     public final static boolean isNumberOrCharacter(final String str) {
         return NUMBER_OR_CHARACTER_PATTERN.matcher(str).matches();
     }
-    
+
     /**
      * 是不是不是一个数字 is not a number
      *
@@ -66,7 +66,7 @@ public class RegexUtil {
         boolean isNumber = str.matches(NUMBER_PATTERN.pattern());
         return isNumber;
     }
-    
+
     /**
      * 是否正整数
      *
@@ -76,15 +76,19 @@ public class RegexUtil {
     public static boolean isPostiveNumber(String str) {
         return POSTIVE_NUMBER_PATTERN.matcher(str).matches();
     }
-    
+
     /**
      * @return
      */
     public static boolean isLetter(String str) {
         return str.matches(LETTER_PATTERN.pattern());
     }
-    
-    
+
+    public static boolean isLetter(char c) {
+        String s = String.valueOf(c);
+        return isLetter(s);
+    }
+
     /**
      * 是否全是匹配中文
      *
@@ -94,7 +98,7 @@ public class RegexUtil {
     public static boolean isChinese(String str) {
         return CHINESE_PATTERN.matcher(str).matches();
     }
-    
+
     /**
      * 是否中文字符
      *
@@ -109,7 +113,7 @@ public class RegexUtil {
         }
         return false;
     }
-    
+
     /**
      * 是否存在标点符号
      *
@@ -119,7 +123,7 @@ public class RegexUtil {
     public static boolean hasInterpunction(String str) {
         return INTERPUNCTION_PATTERN.matcher(str).find();
     }
-    
+
     /**
      * 是否是 IPv4 的 IP 地址
      *
@@ -132,7 +136,7 @@ public class RegexUtil {
         }
         return IP_ADDESS_PATTERN.matcher(str).matches();
     }
-    
+
     public static boolean checkPositive(int[] data) {
         if (data == null) {
             throw new NullPointerException();
@@ -144,7 +148,7 @@ public class RegexUtil {
         }
         return true;
     }
-    
+
     public static boolean checkPositive(long[] data) {
         if (data == null) {
             throw new NullPointerException();
@@ -156,7 +160,7 @@ public class RegexUtil {
         }
         return true;
     }
-    
+
     /**
      * 判断输入的字符串是否符合Email样式.
      *
@@ -166,6 +170,6 @@ public class RegexUtil {
     public static final boolean isEmail(final String str) {
         return EMAIL_PATTERN.matcher(str).matches();
     }
-    
+
 }
 
