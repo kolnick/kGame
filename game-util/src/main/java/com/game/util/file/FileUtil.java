@@ -18,19 +18,19 @@ import com.game.util.string.StringUtil;
  * @since 1.0.0
  */
 public class FileUtil {
-    
+
     public static String getFileType(String filePath) throws Exception {
         int indexOf = filePath.lastIndexOf(".");
         if (indexOf == -1 || indexOf == 0) {
-            throw new Exception("测试");
+            throw new Exception("该文件没有文件类型");
         }
         return filePath.substring(indexOf);
     }
-    
+
     public static String getProjectRootPath() {
         return ClassLoader.getSystemResource("").getPath();
     }
-    
+
     public static List<File> listFiles(String path) {
         if (StringUtil.isNullOrEmpty(path)) {
             return null;
@@ -39,20 +39,20 @@ public class FileUtil {
         findFiles(path, allFile);
         return allFile;
     }
-    
+
     public static List<File> listFiles(String path, String filter) {
         List<File> allFile = new ArrayList<File>();
         findFiles(path, allFile, filter);
         return allFile;
     }
-    
+
     public static List<File> listFile(String path, String filter,
                                       boolean removeSuffix) {
         List<File> allFile = new ArrayList<File>();
         findFiles(path, allFile, filter);
         return allFile;
     }
-    
+
     public static List<String> listFileName(String path, String filter,
                                             boolean removeSuffix) {
         List<File> allFile = new ArrayList<File>();
@@ -71,11 +71,11 @@ public class FileUtil {
         }
         return resultFileNameList;
     }
-    
+
     private static void findFiles(String path, List<File> allFile) {
         findFiles(path, allFile, null);
     }
-    
+
     private static void findFiles(String path, List<File> allFile,
                                   String filter) {
         File file = new File(path);
@@ -102,12 +102,12 @@ public class FileUtil {
             allFile.add(file);
         }
     }
-    
+
     public static URL findURLByFileName(String fileName) {
         ClassLoader cl = FileUtil.class.getClassLoader();
         return cl.getResource(fileName);
     }
-    
+
     public static InputStream findInputStreamByFileName(String fileName) {
         try {
             URL url = findURLByFileName(fileName);
@@ -119,8 +119,8 @@ public class FileUtil {
             return null;
         }
     }
-    
-    
+
+
     /**
      * 判断文件是否存在
      *
@@ -131,7 +131,7 @@ public class FileUtil {
         File f = new File(path);
         return f.exists();
     }
-    
+
     /**
      * 判断文件是否能读取
      *
@@ -142,7 +142,7 @@ public class FileUtil {
         File f = new File(path);
         return f.exists() && f.isFile() && f.canRead();
     }
-    
+
     /**
      * 文件拷贝
      *
@@ -161,6 +161,6 @@ public class FileUtil {
         fis.close();
         fos.close();
     }
-    
-    
+
+
 }

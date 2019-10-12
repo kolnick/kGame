@@ -1,7 +1,5 @@
 package com.game.util.convert;
 
-import java.util.concurrent.TimeUnit;
-
 public class ConvertUtil {
     
     public static String toString(String sep, final String... param) {
@@ -146,16 +144,5 @@ public class ConvertUtil {
         throw new NumberFormatException();
     }
     
-    
-    /**
-     * 时间单位转换
-     *
-     * @param sourceUnit 源时间单位
-     * @param targetUnit 目标时间单位
-     * @param timeData   时间
-     * @return
-     */
-    public static long timeChange(TimeUnit sourceUnit, TimeUnit targetUnit, long timeData) {
-        return targetUnit.convert(timeData, sourceUnit);
-    }
+
 }

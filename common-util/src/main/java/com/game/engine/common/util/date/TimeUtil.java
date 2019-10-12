@@ -1,11 +1,9 @@
-package com.game.util.date;
+package com.game.engine.common.util.date;
 
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,6 +23,16 @@ public class TimeUtil {
      */
     public static final long MILLIS_PER_MINUTE = 60000L;
     /**
+     * 1分钟秒时长
+     */
+    public static final int SECOND_PRE_MINUTE = 60;
+
+    /**
+     * 1小时几分钟
+     */
+    public static final int MINUTE_PRE_HOUR = 60;
+
+    /**
      * 一小时的毫秒时长
      */
     public static final long MILLIS_PER_HOUR = 60L * MILLIS_PER_MINUTE;
@@ -35,7 +43,7 @@ public class TimeUtil {
     /**
      * 一天的秒时长
      */
-    public static final long SECOND_PRE_DAY = 24L * 60 * 60;
+    public static final long SECOND_PRE_DAY = 24L * SECOND_PRE_MINUTE * MINUTE_PRE_HOUR;
 
     /**
      * 1秒的时长
@@ -47,17 +55,16 @@ public class TimeUtil {
      */
     public static final long ONE_WEEK_IN_MILLISECONDS = 7 * MILLIS_PER_DAY;
 
-
     /**
      * 1小时秒时长
      */
-    public static final int SECOND_PRE_HOUR = 60 * 60;
+    public static final int SECOND_PRE_HOUR = SECOND_PRE_MINUTE * SECOND_PRE_MINUTE;
+
 
     private final static DateTimeFormatter DATEFORMATER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
     private final static DateTimeFormatter DATEYMD = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final static DateTimeFormatter DATEYMDHMS = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final static DateTimeFormatter TIMEHM = DateTimeFormatter.ofPattern("HH:mm");
-
 
     /**
      * 设置系统时间
@@ -108,9 +115,22 @@ public class TimeUtil {
         return isSameDay(startCal, endCal);
     }
 
+    public static String timeFormatToYMD(long time) {
+        return timeFormat(time, DATEYMD);
+    }
+
     public static String timeFormat(long time) {
+        return timeFormat(time, DATEYMDHMS);
+    }
+
+    public static String timeFormat(long time, DateTimeFormatter formatter) {
         LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-        return ldt.format(DATEYMDHMS);
+        return ldt.format(formatter);
+    }
+
+    public static String timeFormatNow() {
+        LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(System.currentTimeMillis()), ZoneId.systemDefault());
+        return ldt.format(DATEFORMATER);
     }
 
     public final static LocalDateTime getLocalDateTime(String date) {
@@ -262,6 +282,14 @@ public class TimeUtil {
             case MILLISECONDS: {
                 return timestamp + timeData;
             }
+            case YEAR: {
+                localDateTime = localDateTime.plusYears(timeData);
+                break;
+            }
+            case UNTIL_NEXT_DAY: {
+                localDateTime = localDateTime.plusDays(1).withHour(timeData).withMinute(0).withSecond(0);
+                break;
+            }
             default: {
 
             }
@@ -304,6 +332,21 @@ public class TimeUtil {
         return 0;
     }
 
+    public static long getTimeIntervalCount(TimeUnitType unit, long startTime, long endTime, int interval) {
+        if (unit == TimeUnitType.SECOND) {
+            return (endTime - startTime) / MILLIS_PER_SECOND / interval;
+        } else if (unit == TimeUnitType.DAY) {
+            return (endTime - startTime) / MILLIS_PER_DAY / interval;
+        } else if (unit == TimeUnitType.HOUR) {
+            return (endTime - startTime) / MILLIS_PER_HOUR / interval;
+        } else if (unit == TimeUnitType.MINUTES) {
+            return (endTime - startTime) / MILLIS_PER_MINUTE / interval;
+        } else if (unit == TimeUnitType.MILLISECONDS) {
+            return (endTime - startTime) / interval;
+        }
+        return 0;
+    }
+
     public static long getTimeSecond(TimeUnitType unit, int value) {
         if (unit == TimeUnitType.DAY) {
             return value * MILLIS_PER_DAY / 1000;
@@ -335,7 +378,7 @@ public class TimeUtil {
         Instant instant = Instant.ofEpochMilli(now);
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         int currentHour = localDateTime.getHour();
-        localDateTime.withHour(hour).withMinute(0).withSecond(0).withNano(0);
+        localDateTime = localDateTime.withHour(hour).withMinute(0).withSecond(0).withNano(0);
         if (currentHour < hour) {
             localDateTime = localDateTime.minusDays(1);
         }
@@ -384,11 +427,7 @@ public class TimeUtil {
      * @param time 时间点
      */
     public static int getMonthDays(long time) {
-        Calendar a = Calendar.getInstance();
-        a.setTimeInMillis(time);
-        a.set(Calendar.DATE, 1);//把日期设置为当月第一天
-        a.roll(Calendar.DATE, -1);//日期回滚一天，也就是最后一天
-        return a.get(Calendar.DATE);
+        return toLocalDate(time).with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
     }
 
     /**
@@ -492,6 +531,13 @@ public class TimeUtil {
     }
 
     /**
+     * millSecond转LocalDateTime
+     */
+    public static LocalDateTime toLocalDate(LocalDateTime localDateTime) {
+        return LocalDateTime.ofInstant(localDateTime.atZone(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
+    }
+
+    /**
      * 格式化日期 转 MillSecond
      */
     public static long getTimeFormatToMillSecond(String dateTime) {
@@ -503,6 +549,12 @@ public class TimeUtil {
         return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    /**
+     * 增加距离下个整点的秒数
+     *
+     * @param startTime
+     * @return
+     */
     public static int getNowSecondToOneHour(long startTime) {
         LocalDateTime startLocal = toLocalDate(startTime);
         int minute = startLocal.getMinute();
@@ -511,5 +563,84 @@ public class TimeUtil {
         int subSecond = 60 - second;
         return subMinute * 60 + subSecond;
     }
+
+    /**
+     * 获得某一天的0点
+     *
+     * @param time
+     * @return
+     */
+    public static LocalDateTime getDayMin(long time) {
+        LocalDateTime fixTime = toLocalDate(time);
+        return LocalDateTime.of(fixTime.toLocalDate(), LocalTime.MIN);
+    }
+
+    /**
+     * 获得某一天的23:59:59点
+     *
+     * @param time
+     * @return
+     */
+    public static LocalDateTime getDayMax(long time) {
+        LocalDateTime fixTime = toLocalDate(time);
+        return LocalDateTime.of(fixTime.toLocalDate(), LocalTime.MAX);
+    }
+
+
+    /**
+     * 获取零点时间
+     *
+     * @param time 时间
+     * @return
+     */
+    public static long getZeroClockTime(long time) {
+        LocalDateTime localDateTime = toLocalDate(time);
+        return toMillSecond(localDateTime.withHour(0).withMinute(0).withSecond(0).withNano(0));
+    }
+
+    /**
+     * 获取逻辑距离0点天数
+     *
+     * @param sourceTime
+     * @param targetTime
+     * @return
+     */
+    public static long getIntervalDays(long sourceTime, long targetTime) {
+        long source0ClockTime = getZeroClockTime(sourceTime);
+        long target0ClockTime = getZeroClockTime(targetTime);
+        return (target0ClockTime - source0ClockTime) / TimeUtil.MILLIS_PER_DAY;
+    }
+
+    /**
+     * 减少一段时间
+     *
+     * @param time     指定时间
+     * @param timeUnit 时间单位
+     * @param data     数据
+     * @return
+     */
+    public static LocalDateTime subTime(long time, TimeUnit timeUnit, int data) {
+        LocalDateTime localDateTime = toLocalDate(time);
+        switch (timeUnit) {
+            case NANOSECONDS:
+                return localDateTime.minusNanos(data);
+            case MICROSECONDS:
+                return localDateTime.minus(data, ChronoUnit.MICROS);
+            case MILLISECONDS:
+                return localDateTime.minus(data, ChronoUnit.MILLIS);
+            case SECONDS:
+                return localDateTime.minusSeconds(data);
+            case MINUTES:
+                return localDateTime.minusMinutes(data);
+            case HOURS:
+                return localDateTime.minusHours(data);
+            case DAYS:
+                return localDateTime.minusDays(data);
+            default: {
+                return localDateTime;
+            }
+        }
+    }
+
 
 }

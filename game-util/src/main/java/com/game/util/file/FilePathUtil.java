@@ -81,7 +81,6 @@ public class FilePathUtil {
      *
      * @param customPath 默认配置文件路径
      * @return
-     * @throws FileNotFoundException
      */
     public static File getConfigPathFileHolder(String customPath, String subDir) {
         File configPathFileHolder;

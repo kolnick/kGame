@@ -29,6 +29,7 @@
         <module>game-engine-core</module>
         <module>game-robot</module>
         <module>game-scene</module>
+        <module>common-util</module>
     </modules>
 
     <name>gameserver</name>
