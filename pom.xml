@@ -50,7 +50,7 @@
         </spring.boot.dependies.version>
         <spring.boot.version>2.0.3.RELEASE</spring.boot.version>
         <fastjson.version>1.2.31</fastjson.version>
-        <mysql.version>8.0.11</mysql.version>
+        <mysql.version>8.0.16</mysql.version>
         <netty.version>4.1.26.Final</netty.version>
         <aspectj.version>1.9.1</aspectj.version>
         <redis.version>2.9.0</redis.version>
